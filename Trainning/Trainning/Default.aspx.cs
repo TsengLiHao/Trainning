@@ -17,5 +17,10 @@ namespace Trainning
         {
             Response.Redirect("/Login.aspx");
         }
+
+        protected void btnWrite_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/List.aspx");
+        }
     }
 }

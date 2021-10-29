@@ -12,6 +12,7 @@
         <div>
             <h1>動態問券</h1>
             <asp:Button ID="btnLogin" runat="server" Text="登入" OnClick="btnLogin_Click"/>
+            <asp:Button ID="btnWrite" runat="server" Text="填寫" OnClick="btnWrite_Click"/>
         </div>
     </form>
 </body>
