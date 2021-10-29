@@ -16,6 +16,7 @@ namespace Trainning
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             Response.Redirect("/Login.aspx");
+
         }
 
         protected void btnWrite_Click(object sender, EventArgs e)
