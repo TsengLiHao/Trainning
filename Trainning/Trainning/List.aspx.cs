@@ -33,6 +33,14 @@ namespace Trainning
                 this.ltMsg.Text = "No Data";
                 return;
             }
+
+            foreach(DataRow dr in dt.Rows)
+            {
+                if(dr["Status"].ToString() == "未開放" || dr["Status"].ToString() == "已結束")
+                {
+                    
+                }
+            }
             
         }
 
@@ -153,8 +161,43 @@ namespace Trainning
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            this.SearchStart();
-            //this.SearchEnd();
+            var startTime = this.txtStart.Text;
+            var endTime = this.txtEnd.Text;
+
+            var dt = ListInfoManager.SearchDate(startTime, endTime);
+            this.gvList.DataSource = dt;
+            this.gvList.DataBind();
+
+            if (string.IsNullOrEmpty(this.txtEnd.Text))
+            {
+                var dtStart = ListInfoManager.SearchDateStart(startTime);
+                this.gvList.DataSource = dtStart;
+                this.gvList.DataBind();
+            }
+
+            if (string.IsNullOrEmpty(this.txtStart.Text))
+            {
+                var dtEnd = ListInfoManager.SearchDateEnd(endTime);
+                this.gvList.DataSource = dtEnd;
+                this.gvList.DataBind();
+            }
+
+            if (!string.IsNullOrEmpty(this.txtStart.Text) && !string.IsNullOrEmpty(this.txtEnd.Text))
+            {
+                DateTime start = Convert.ToDateTime(startTime);
+                DateTime end = Convert.ToDateTime(endTime);
+
+                TimeSpan diff = end - start;
+
+                if (Convert.ToInt32(diff.TotalDays) < 0)
+                {
+                    this.ltMsg.Text = "選取日期範圍不合理";
+                }
+                else
+                {
+                    this.ltMsg.Text = "";
+                }
+            }
         }
 
         protected void btnTitleSearch_Click(object sender, EventArgs e)

@@ -82,7 +82,7 @@
                                     <asp:BoundField DataField="QuestionID" HeaderText="#"/>
                                     <asp:BoundField DataField="QuestionName" HeaderText="問題" />
                                     <asp:BoundField DataField="Type" HeaderText="種類" />
-                                    <asp:TemplateField HeaderText="必須">
+                                    <asp:TemplateField HeaderText="必填">
                                         <ItemTemplate>
                                             <asp:CheckBox ID="cbxRequired" runat="server" Checked='<%#(int)Eval("Required")==0 ? false : true %>'/>
                                         </ItemTemplate>

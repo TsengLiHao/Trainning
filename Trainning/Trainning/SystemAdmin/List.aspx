@@ -55,11 +55,12 @@
                         </Columns>
                     </asp:GridView>
                     <br />
-                    <uc1:ucPager runat="server" ID="ucPager" PageSize="10" Url="/SystemAdmin/List.aspx" />
+                    <asp:Literal ID="ltMsg" runat="server"></asp:Literal>
+                    <uc1:ucPager runat="server" ID="ucPager" PageSize="10" Url="/SystemAdmin/List.aspx" /><br />
+                    
                 </td>
             </tr>
         </table>
-        <asp:Literal ID="ltMsg" runat="server"></asp:Literal>
     </form>
 </body>
 </html>

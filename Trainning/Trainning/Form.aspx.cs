@@ -79,6 +79,7 @@ namespace Trainning
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
+            Response.Redirect("/List.aspx");
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)

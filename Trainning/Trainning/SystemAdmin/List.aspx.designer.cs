@@ -87,15 +87,6 @@ namespace Trainning.SystemAdmin
         protected global::System.Web.UI.WebControls.GridView gvList;
 
         /// <summary>
-        /// ucPager 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::Trainning.ucPager ucPager;
-
-        /// <summary>
         /// ltMsg 控制項。
         /// </summary>
         /// <remarks>
@@ -103,5 +94,14 @@ namespace Trainning.SystemAdmin
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal ltMsg;
+
+        /// <summary>
+        /// ucPager 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::Trainning.ucPager ucPager;
     }
 }

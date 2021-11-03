@@ -48,6 +48,105 @@ namespace Trainning.DBSource
             }
         }
 
+        public static DataTable SearchDate(string startTime, string endTime)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" SELECT*
+                    FROM ListInfo
+                    WHERE StartTime>=@startTime AND EndTime<=@endTime
+                    ORDER BY ListID ASC
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@startTime", startTime);
+                    command.Parameters.AddWithValue("@endTime", endTime);
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        return dt;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public static DataTable SearchDateStart(string startTime)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" SELECT*
+                    FROM ListInfo
+                    WHERE StartTime>=@startTime
+                    ORDER BY ListID ASC
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@startTime", startTime);
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        return dt;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public static DataTable SearchDateEnd(string endTime)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" SELECT*
+                    FROM ListInfo
+                    WHERE EndTime<=@endTime
+                    ORDER BY ListID ASC
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@endTime", endTime);
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        return dt;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                        return null;
+                    }
+                }
+            }
+        }
         public static DataRow GetListInfoByID(string id)
         {
             string connectionString = GetConnectionString();
