@@ -67,32 +67,6 @@ namespace Trainning.SystemAdmin
                 }
             }
         }
-        private void SearchStart()
-        {
-            string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection con = new SqlConnection(constr))
-            {
-                using (SqlCommand cmd = new SqlCommand())
-                {
-                    string sql = "SELECT ListID, ID, ListName, ListContent, Status, StartTime, Endtime FROM ListInfo";
-                    if (!string.IsNullOrEmpty(txtStart.Text.Trim()))
-                    {
-                        sql += " WHERE StartTime LIKE @StartTime + '%'";
-                        cmd.Parameters.AddWithValue("@StartTime", txtStart.Text.Trim());
-                    }
-                    cmd.CommandText = sql;
-                    cmd.Connection = con;
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                    {
-                        DataTable dt = new DataTable();
-                        sda.Fill(dt);
-                        gvList.DataSource = dt;
-                        gvList.DataBind();
-                    }
-                }
-            }
-        }
-
         private int GetCurrentPage()
         {
             string pageText = Request.QueryString["Page"];
@@ -168,12 +142,18 @@ namespace Trainning.SystemAdmin
 
                 if (Convert.ToInt32(diff.TotalDays) < 0)
                 {
-                    this.ltMsg.Text = "選取日期範圍不合理";
+                    //this.ltMsg.Text = "選取日期範圍不合理";
+                    var sEnd = this.txtStart.Text;
+                    var eStart = this.txtEnd.Text;
+
+                    var fakeDt = ListInfoManager.SearchDate(eStart, sEnd);
+                    this.gvList.DataSource = fakeDt;
+                    this.gvList.DataBind();
                 }
-                else
-                {
-                    this.ltMsg.Text = "";
-                }
+                //else
+                //{
+                //    this.ltMsg.Text = "";
+                //}
             }
 
         }

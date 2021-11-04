@@ -102,6 +102,8 @@ namespace Trainning.SystemAdmin
                 drQuestion[1] = questionName;
                 drQuestion[2] = type;
                 drQuestion[3] = required;
+
+                QuestionInfoManager.CreateQuestion(id, number, questionName, type, required);
             }
             else
             {
