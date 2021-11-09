@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Trainning.DBSource
 {
-    public class QuestionInfoManager
+    public class CommonQuestionInfoManager
     {
         private static string GetConnectionString()
         {
@@ -17,13 +17,13 @@ namespace Trainning.DBSource
             return val;
         }
 
-        public static DataTable GetQuestionInfo()
+        public static DataTable GetCommonQuestionInfo()
         {
             string connectionString = GetConnectionString();
             string dbCommandString =
-                $@" SELECT QuestionID, QuestionName, Type, Required
-                    FROM QuestionInfo
-                    ORDER BY QuestionID ASC
+                $@" SELECT CommonQuestionID, CommonQuestionTitle, CommonQuestionName, Type, Required, Answer
+                    FROM CommonQuestionInfo
+                    ORDER BY CommonQuestionID ASC
                 ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -48,53 +48,20 @@ namespace Trainning.DBSource
             }
         }
 
-        public static DataTable GetQuestionByID(string id)
+        public static DataRow GetCommonQuestionInfoByTitle(string commonQuestionTitle)
         {
             string connectionString = GetConnectionString();
             string dbCommandString =
-                $@" SELECT DISTINCT QuestionID, QuestionName, Type, Required, Answer
-                    FROM QuestionInfo
-                    WHERE ID = @id
-                    ORDER BY QuestionID ASC
+                $@" SELECT CommonQuestionTitle, CommonQuestionName, Type, Required, Answer
+                    FROM CommonQuestionInfo
+                    WHERE CommonQuestionTitle=@commonQuestionTitle
                 ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(dbCommandString, connection))
                 {
-                    command.Parameters.AddWithValue("@id", id);
-                    try
-                    {
-                        connection.Open();
-                        SqlDataReader reader = command.ExecuteReader();
-
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-                        return dt;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                        return null;
-                    }
-                }
-            }
-        }
-
-        public static DataRow GetQuestionInfoByID(string id)
-        {
-            string connectionString = GetConnectionString();
-            string dbCommandString =
-                $@" SELECT QuestionID, QuestionName, Type, Required
-                    FROM QuestionInfo
-                    WHERE ID = @id
-                ";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@commonQuestionTitle", commonQuestionTitle);
                     try
                     {
                         connection.Open();
@@ -118,25 +85,22 @@ namespace Trainning.DBSource
                 }
             }
         }
-
-        public static void CreateQuestion(string id, int questionID, string questionName, string type, int required, string answer)
+        public static void CreateCommonQuestion(string commonQuestionTitle, string commonQuestionName, string type, int required, string answer)
         {
             string connectionString = GetConnectionString();
             string dbCommandString =
-                $@" INSERT INTO QuestionInfo
+                $@" INSERT INTO CommonQuestionInfo
                     (
-                        ID
-                        ,QuestionID
-                        ,QuestionName
+                        CommonQuestionTitle
+                        ,CommonQuestionName
                         ,Type
                         ,Required
                         ,Answer
                     )
                     VALUES
                     (
-                        @id
-                        ,@questionID
-                        ,@questionName
+                        @commonQuestionTitle
+                        ,@commonQuestionName
                         ,@type
                         ,@required
                         ,@answer
@@ -148,9 +112,8 @@ namespace Trainning.DBSource
             {
                 using (SqlCommand command = new SqlCommand(dbCommandString, connection))
                 {
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@questionID", questionID);
-                    command.Parameters.AddWithValue("@questionName", questionName);
+                    command.Parameters.AddWithValue("@commonQuestionTitle", commonQuestionTitle);
+                    command.Parameters.AddWithValue("@commonQuestionName", commonQuestionName);
                     command.Parameters.AddWithValue("@type", type);
                     command.Parameters.AddWithValue("@required", required);
                     command.Parameters.AddWithValue("@answer", answer);
@@ -169,19 +132,18 @@ namespace Trainning.DBSource
             }
         }
 
-        public static bool UpdateQuestion(string id, int questionID, string questionName, string type, int required, string answer)
+        public static bool UpdateCommonQuestion(int commonQuestionID, string commonQuestionTitle, string commonQuestionName, string type, int required, string answer)
         {
             string connectionString = GetConnectionString();
             string dbCommandString =
-                $@" UPDATE QuestionInfo
+                $@" UPDATE CommonQuestionInfo
                     SET
-                        ID              = @id
-                        ,QuestionID     = @questionID
-                        ,QuestionName   = @questionName
-                        ,Type           = @type
-                        ,Required       = @required
-                        ,Answer         = @answer
-                    WHERE QuestionID = @questionID ";
+                        CommonQuestionTitle    = @commonQuestionTitle
+                        ,CommonQuestionName     = @commonQuestionName
+                        ,Type                   = @type
+                        ,Required               = @required
+                        ,Answer                 = @answer
+                    WHERE CommonQuestionID = @commonQuestionID ";
 
 
             // connect db & execute
@@ -189,9 +151,9 @@ namespace Trainning.DBSource
             {
                 using (SqlCommand command = new SqlCommand(dbCommandString, connection))
                 {
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@questionID", questionID);
-                    command.Parameters.AddWithValue("@questionName", questionName);
+                    command.Parameters.AddWithValue("@commonQuestionID", commonQuestionID);
+                    command.Parameters.AddWithValue("@commonQuestionTitle", commonQuestionTitle);
+                    command.Parameters.AddWithValue("@commonQuestionName", commonQuestionName);
                     command.Parameters.AddWithValue("@type", type);
                     command.Parameters.AddWithValue("@required", required);
                     command.Parameters.AddWithValue("@answer", answer);
@@ -215,19 +177,19 @@ namespace Trainning.DBSource
             }
         }
 
-        public static void DeleteQuestion(int questionID)
+        public static void DeleteCommonQuestion(int commonquestionID)
         {
             string connectionString = GetConnectionString();
             string dbCommandString =
-                $@" DELETE [QuestionInfo]
-                    WHERE QuestionID = @questionID ";
+                $@" DELETE [CommonQuestionInfo]
+                    WHERE CommonQuestionID = @commonquestionID ";
 
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(dbCommandString, connection))
                 {
-                    command.Parameters.AddWithValue("@questionID", questionID);
+                    command.Parameters.AddWithValue("@commonquestionID", commonquestionID);
 
                     try
                     {
@@ -243,38 +205,5 @@ namespace Trainning.DBSource
             }
         }
 
-        public static DataTable GetAnswerInfoByID(string id, int questionID)
-        {
-            string connectionString = GetConnectionString();
-            string dbCommandString =
-                $@" SELECT ID, QuestionID, value
-                    FROM QuestionInfo
-                    CROSS APPLY STRING_SPLIT(Answer, ';')
-                    WHERE ID = @id AND QuestionID = @questionID
-                ";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@questionID", questionID);
-                    try
-                    {
-                        connection.Open();
-                        SqlDataReader reader = command.ExecuteReader();
-
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-                        return dt;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                        return null;
-                    }
-                }
-            }
-        }
     }
 }

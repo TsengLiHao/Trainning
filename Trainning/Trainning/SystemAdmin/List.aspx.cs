@@ -157,5 +157,22 @@ namespace Trainning.SystemAdmin
             }
 
         }
+
+        protected void ImageButton1_Click(object sender, ImageClickEventArgs e)
+        {
+            foreach (GridViewRow row in gvList.Rows)
+            {
+                if (row.RowType == DataControlRowType.DataRow)
+                {
+                    CheckBox chxDelete = row.FindControl("cbxChoose") as CheckBox;
+                    if (chxDelete.Checked)
+                    {
+                        int id = Convert.ToInt32(row.Cells[1].Text);
+                        ListInfoManager.DeleteList(id);
+                    }
+                }
+            }
+            Response.Redirect(this.Request.RawUrl);
+        }
     }
 }

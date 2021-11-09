@@ -33,10 +33,10 @@
                     <asp:Button ID="btnSearch" runat="server" Text="搜尋" OnClick="btnSearch_Click"/>
                     </div>
                     <br />
-                    <asp:GridView ID="gvList" runat="server" AutoGenerateColumns="False">
+                    <asp:GridView ID="gvList" runat="server" AutoGenerateColumns="False"  >
                         <Columns>
-                            <asp:BoundField DataField="ListID" HeaderText="#" />
-                            <asp:TemplateField HeaderText="問卷">
+                            <asp:BoundField DataField="ListID" HeaderText="#"/>
+                            <asp:TemplateField HeaderText="問卷" >
                                 <ItemTemplate>
                                     <a href="/Form.aspx?ID=<%# Eval("ID") %>"><%# Eval("ListName") %></a>
                                 </ItemTemplate>

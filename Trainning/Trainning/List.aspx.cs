@@ -15,33 +15,50 @@ namespace Trainning
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            var dt = ListInfoManager.GetListInfo();
-            
-            if (dt.Rows.Count > 0)
+            if (!IsPostBack)
             {
-                var pagedList = this.GetPagedDataTable(dt);
-            
-                this.gvList.DataSource = pagedList;
-                this.gvList.DataBind();
-            
-                this.ucPager.TotalSize = dt.Rows.Count;
-                this.ucPager.Bind();
-            }
-            else
-            {
-                this.ucPager.Visible = false;
-                this.ltMsg.Text = "No Data";
-                return;
+                var dt = ListInfoManager.GetListInfo();
+
+                if (dt.Rows.Count > 0)
+                {
+                    var pagedList = this.GetPagedDataTable(dt);
+
+                    this.gvList.DataSource = pagedList;
+                    this.gvList.DataBind();
+
+                    this.ucPager.TotalSize = dt.Rows.Count;
+                    this.ucPager.Bind();
+                }
+                else
+                {
+                    this.ucPager.Visible = false;
+                    this.ltMsg.Text = "No Data";
+                    return;
+                }
+
+                foreach (GridViewRow row in gvList.Rows)
+                {
+                    if (row.RowType == DataControlRowType.DataRow)
+                    {
+                        if (row.Cells[2].Text == "未開放" || row.Cells[2].Text == "已結束")
+                        {
+                            
+                        }
+
+                        var end = Convert.ToDateTime(row.Cells[4].Text);
+
+                        if (end < DateTime.Today)
+                            row.Cells[2].Text = "已結束";
+
+                        var start = Convert.ToDateTime(row.Cells[3].Text);
+
+                        if (start > DateTime.Today)
+                            row.Cells[2].Text = "未開放";
+                    }
+                }
+
             }
 
-            foreach(DataRow dr in dt.Rows)
-            {
-                if(dr["Status"].ToString() == "未開放" || dr["Status"].ToString() == "已結束")
-                {
-                    
-                }
-            }
-            
         }
 
         private void SearchTitle()

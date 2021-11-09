@@ -36,8 +36,14 @@
                     <asp:TextBox ID="txtEnd" runat="server" TextMode="Date"></asp:TextBox>
                     &ensp;
                     <asp:Button ID="btnSearch" runat="server" Text="搜尋" OnClick="btnSearch_Click"/><br />
+                     <asp:ImageButton ID="ImageButton1" runat="server" ImageUrl="image/Trash Can.png" Width="35" Height="35" OnClick="ImageButton1_Click"/><br />
                     <asp:GridView ID="gvList" runat="server" AutoGenerateColumns="False">
                         <Columns>
+                            <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="cbxChoose" runat="server" />
+                                        </ItemTemplate>
+                            </asp:TemplateField>
                             <asp:BoundField DataField="ListID" HeaderText="#" />
                             <asp:TemplateField HeaderText="問卷">
                                 <ItemTemplate>

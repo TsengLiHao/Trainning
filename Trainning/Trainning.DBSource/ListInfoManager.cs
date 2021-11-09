@@ -232,5 +232,34 @@ namespace Trainning.DBSource
                 }
             }
         }
+
+        public static void DeleteList(int listID)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" DELETE [ListInfo]
+                    WHERE ListID = @listID ";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@listID", listID);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                    }
+                }
+            }
+        }
+
     }
 }

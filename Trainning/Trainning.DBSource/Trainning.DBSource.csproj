@@ -42,10 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnswerInfoManager.cs" />
+    <Compile Include="CommonQuestionInfoManager.cs" />
     <Compile Include="ListInfoManager.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="QuestionInfoManager.cs" />
+    <Compile Include="ReplyInfoManager.cs" />
     <Compile Include="UserInfoManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

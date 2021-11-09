@@ -42,13 +42,13 @@ namespace Trainning
         protected global::System.Web.UI.WebControls.Literal ltStart;
 
         /// <summary>
-        /// Label2 控制項。
+        /// lbMark 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
+        protected global::System.Web.UI.WebControls.Label lbMark;
 
         /// <summary>
         /// ltEnd 控制項。
@@ -78,40 +78,40 @@ namespace Trainning
         protected global::System.Web.UI.WebControls.TextBox txtContent;
 
         /// <summary>
-        /// txtName 控制項。
+        /// ltName 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtName;
+        protected global::System.Web.UI.WebControls.Literal ltName;
 
         /// <summary>
-        /// txtPhone 控制項。
+        /// ltPhone 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPhone;
+        protected global::System.Web.UI.WebControls.Literal ltPhone;
 
         /// <summary>
-        /// txtEmail 控制項。
+        /// ltEmail 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEmail;
+        protected global::System.Web.UI.WebControls.Literal ltEmail;
 
         /// <summary>
-        /// txtAge 控制項。
+        /// ltAge 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAge;
+        protected global::System.Web.UI.WebControls.Literal ltAge;
 
         /// <summary>
         /// PlaceHolder1 控制項。
@@ -148,14 +148,5 @@ namespace Trainning
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal Literal1;
-
-        /// <summary>
-        /// Label1 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
     }
 }
