@@ -129,7 +129,7 @@ namespace Trainning.SystemAdmin
                                         if (count == 0)
                                             this.PlaceHolder4.Controls.Add(new LiteralControl($"0%" + $"({0 + count })" + "<br />"));
                                         else
-                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"{(100 / (j+1))*count}%" + $"({0 + count })" + "<br />"));
+                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"{(100 / inputCount) *count}%" + $"({0 + count })" + "<br />"));
 
                                     }
                                 }

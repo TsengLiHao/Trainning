@@ -16,7 +16,7 @@
         <asp:PlaceHolder ID="PlaceHolder1" runat="server"></asp:PlaceHolder>
         <asp:Chart ID="Chart1" runat="server">
             <Series>
-                <asp:Series Name="Series1"></asp:Series>
+                <asp:Series Name="Series1" ChartType="Pie"></asp:Series>
             </Series>
             <ChartAreas>
                 <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
