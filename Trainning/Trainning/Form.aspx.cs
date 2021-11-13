@@ -13,8 +13,6 @@ namespace Trainning
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
                 if (Request.QueryString["ID"] == null)
                 {
                     Response.Redirect("/List.aspx");
@@ -103,7 +101,7 @@ namespace Trainning
                         this.PlaceHolder1.Controls.Add(new LiteralControl("<br />"));
                     }
                 }
-            }
+            
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)

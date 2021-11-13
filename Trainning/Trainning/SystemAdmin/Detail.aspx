@@ -1,5 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Detail.aspx.cs" Inherits="Trainning.SystemAdmin.Detail" %>
 
+<%@ Register Src="~/ucPager.ascx" TagPrefix="uc1" TagName="ucPager" %>
+
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -110,8 +113,51 @@
                             <asp:Button ID="btnSubmit2" runat="server" Text="送出" OnClick="btnSubmit2_Click"/>
                         </div>
                         <div class="tab-pane fade" id="pills-infomation" role="tabpanel" aria-labelledby="pills-infomation-tab">
+                            <asp:PlaceHolder ID="PlaceHolder1" runat="server">
+                            <asp:Button ID="btnDownload" runat="server" Text="匯出" OnClick="btnDownload_Click"/><br />
+                            <asp:GridView ID="gvReply" runat="server" AutoGenerateColumns="false">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="#">
+                                        <ItemTemplate>
+                                            <%#gvReply.PageIndex * gvReply.PageSize + gvReply.Rows.Count + 1%>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:BoundField DataField="Name" HeaderText="姓名"/>
+                                    <asp:BoundField DataField="ReplyTime" HeaderText="填寫時間"/>
+                                     <asp:TemplateField HeaderText="觀看細節">
+                                        <ItemTemplate>
+                                            <asp:Button ID="btnInfo" runat="server" Text="前往" OnClick="btnInfo_Click"/>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                                <br />
+                            <uc1:ucPager runat="server" ID="ucPager" PageSize="10" Url="/SystemAdmin/Detail.aspx" />
+                            <asp:Literal ID="ltMsg" runat="server"></asp:Literal>
+                                </asp:PlaceHolder>
+                            <asp:PlaceHolder ID="PlaceHolder2" runat="server" Visible="false">
+                                姓名:
+                                <asp:Literal ID="ltName" runat="server"></asp:Literal>
+                                &ensp;
+                                手機:
+                                <asp:Literal ID="ltPhone" runat="server"></asp:Literal>
+                                <br />
+                                Email:
+                                <asp:Literal ID="ltEmail" runat="server"></asp:Literal>
+                                &ensp;
+                                年齡:
+                                <asp:Literal ID="ltAge" runat="server"></asp:Literal>
+                                <br />
+                                填寫時間:
+                                <asp:Literal ID="ltReplyTime" runat="server"></asp:Literal>
+                                <br />
+                            </asp:PlaceHolder>
+                            <asp:PlaceHolder ID="PlaceHolder3" runat="server" Visible="false"></asp:PlaceHolder><br />
+                            <asp:Button ID="btnBack" runat="server" Text="返回" OnClick="btnBack_Click"/>
                         </div>
-                        <div class="tab-pane fade" id="pills-result" role="tabpanel" aria-labelledby="pills-result-tab">...</div>
+                        <div class="tab-pane fade" id="pills-result" role="tabpanel" aria-labelledby="pills-result-tab">
+                            <asp:PlaceHolder ID="PlaceHolder4" runat="server"></asp:PlaceHolder>
+                        </div>
                     </div>
                 </td>
             </tr>

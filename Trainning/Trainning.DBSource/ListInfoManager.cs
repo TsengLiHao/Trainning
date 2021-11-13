@@ -233,6 +233,52 @@ namespace Trainning.DBSource
             }
         }
 
+        public static bool UpdateListInfo(string id, string listName, string listContent, string status, string startTime, string endTime)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" UPDATE ListInfo
+                    SET
+                        ID              = @id
+                        ,ListName        = @listName
+                        ,ListContent    = @listContent
+                        ,Status         = @status
+                        ,StartTime      = @startTime
+                        ,EndTime        = @endTime
+                    WHERE ID = @id ";
+
+
+            // connect db & execute
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@listName", listName);
+                    command.Parameters.AddWithValue("@listContent", listContent);
+                    command.Parameters.AddWithValue("@status", status);
+                    command.Parameters.AddWithValue("@startTime", startTime);
+                    command.Parameters.AddWithValue("@endTime", endTime);
+
+                    try
+                    {
+                        connection.Open();
+                        int effectRow = command.ExecuteNonQuery();
+
+                        if (effectRow == 1)
+                            return true;
+                        else
+                            return false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                        return false;
+                    }
+                }
+            }
+        }
+
         public static void DeleteList(int listID)
         {
             string connectionString = GetConnectionString();

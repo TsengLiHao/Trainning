@@ -55,7 +55,8 @@ namespace Trainning
                     {
                         if (this.Session[$"ResponseOfTest{i}"] != null)
                         {
-                            this.PlaceHolder1.Controls.Add(new LiteralControl(this.Session[$"ResponseOfTest{i}"] + "<br />"));
+                            if (i == Convert.ToInt32(dr["QuestionID"]))
+                                this.PlaceHolder1.Controls.Add(new LiteralControl(this.Session[$"ResponseOfTest{i}"] + "<br />"));
                         }
                         else
                             continue;
@@ -79,7 +80,8 @@ namespace Trainning
                     {
                         if (this.Session[$"ResponseOfRadio{i}"] != null)
                         {
-                            this.PlaceHolder1.Controls.Add(new LiteralControl(this.Session[$"ResponseOfRadio{i}"] + "<br />"));
+                            if (i == Convert.ToInt32(dr["QuestionID"]))
+                                this.PlaceHolder1.Controls.Add(new LiteralControl(this.Session[$"ResponseOfRadio{i}"] + "<br />"));
                         }
                         else
                             continue;
@@ -102,7 +104,7 @@ namespace Trainning
                     {
                         if (this.Session[$"ResponseOfCheck{i}"] != null)
                         {
-                            if(i == 4)
+                            if(i == Convert.ToInt32(dr["QuestionID"]))
                             this.PlaceHolder1.Controls.Add(new LiteralControl(this.Session[$"ResponseOfCheck{i}"] + "<br />"));
                         }
                         else

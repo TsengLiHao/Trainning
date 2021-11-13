@@ -17,19 +17,26 @@ namespace Trainning.DBSource
             return val;
         }
 
-        public static DataTable GetQuestionByID()
+        public static DataTable GetReplyInfoByListID(string listID)
         {
             string connectionString = GetConnectionString();
             string dbCommandString =
-                $@" SELECT DISTINCT Name, ReplyID, Phone, Email, Age, ReplyTime, ListID, QuestionID, ReplyAnswer
-                    FROM ReplyInfo
-                    ORDER BY ReplyID DESC
+                $@" WITH x AS (SELECT [Name],ReplyTime,ListID,
+                    RN = Row_number() 
+                         OVER( 
+                         partition BY [Name]
+                         ORDER BY ReplyTime DESC) 
+                         FROM   ReplyInfo) 
+                    SELECT [Name],ReplyTime,ListID
+                    FROM   x
+                    WHERE  rn = 1 AND ListID=@listID
                 ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(dbCommandString, connection))
                 {
+                    command.Parameters.AddWithValue("@listID", listID);
                     try
                     {
                         connection.Open();
@@ -47,6 +54,117 @@ namespace Trainning.DBSource
                 }
             }
         }
+
+        public static DataTable GetReplyInfo(string listID, int questionID)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" SELECT Name, Phone, Email, Age, ReplyTime, ListID, QuestionID, ReplyAnswer
+                    FROM ReplyInfo
+                    WHERE ListID=@listID AND QuestionID=@questionID
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@listID", listID);
+                    command.Parameters.AddWithValue("@questionID", questionID);
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        return dt;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public static DataRow GetReplyByName(string name)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" SELECT Name, Phone, Email, Age, ReplyTime, ListID, QuestionID, ReplyAnswer
+                    FROM ReplyInfo
+                    WHERE Name=@name
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@name", name);
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        reader.Close();
+
+                        if (dt.Rows.Count == 0)
+                            return null;
+
+                        DataRow dr = dt.Rows[0];
+                        return dr;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public static DataRow GetReply(string name, int questionID)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" SELECT Name, Phone, Email, Age, ReplyTime, ListID, QuestionID, ReplyAnswer
+                    FROM ReplyInfo
+                    WHERE Name=@name AND QuestionID=@questionID
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@name", name);
+                    command.Parameters.AddWithValue("@questionID", questionID);
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        reader.Close();
+
+                        if (dt.Rows.Count == 0)
+                            return null;
+
+                        DataRow dr = dt.Rows[0];
+                        return dr;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                        return null;
+                    }
+                }
+            }
+        }
+
         public static void CreateReply(string name, int phone, string email, int age, string listID, int questionID, string answer)
         {
             string connectionString = GetConnectionString();

@@ -40,6 +40,23 @@ namespace Trainning.SystemAdmin
                 return;
             }
 
+            foreach (GridViewRow row in gvList.Rows)
+            {
+                if (row.RowType == DataControlRowType.DataRow)
+                {
+
+                    var end = Convert.ToDateTime(row.Cells[5].Text);
+
+                    if (end < DateTime.Today)
+                        row.Cells[3].Text = "已結束";
+
+                    var start = Convert.ToDateTime(row.Cells[4].Text);
+
+                    if (start > DateTime.Today)
+                        row.Cells[3].Text = "未開放";
+                }
+            }
+
         }
 
         private void SearchTitle()

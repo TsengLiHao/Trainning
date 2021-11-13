@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -24,6 +26,21 @@ namespace Trainning.SystemAdmin
 
                 var id = Request.QueryString["ID"];
 
+                ddlQuestionType.Items.Insert(0, new ListItem("--Choose Type--"));
+
+                DataTable dtQuestion = new DataTable();
+
+                dtQuestion.Columns.Add(new DataColumn("QuestionID", typeof(int)));
+                dtQuestion.Columns.Add(new DataColumn("QuestionName", typeof(string)));
+                dtQuestion.Columns.Add(new DataColumn("Type", typeof(string)));
+                dtQuestion.Columns.Add(new DataColumn("Required", typeof(bool)));
+                dtQuestion.Columns.Add(new DataColumn("Answer", typeof(string)));
+
+                this.Session["QuestionInfo"] = dtQuestion;
+
+                this.BindGrid();
+
+
                 if (Request.QueryString["ID"] != null)
                 {
                     var dr = ListInfoManager.GetListInfoByID(id);
@@ -45,21 +62,108 @@ namespace Trainning.SystemAdmin
                     //dtCurrent.Columns.AddRange(new DataColumn[4] { new DataColumn("#"), new DataColumn("問題"), new DataColumn("種類"), new DataColumn("必填") });
                     //Session["CurrentTable"] = dtCurrent;
                     //this.BindGrid();
+
+                    var dtReply = ReplyInfoManager.GetReplyInfoByListID(id);
+
+                    this.gvReply.DataSource = dtReply;
+                    this.gvReply.DataBind();
+
+                    if (dtReply.Rows.Count > 0)
+                    {
+                        var pagedList = this.GetPagedDataTable(dtReply);
+
+                        this.gvReply.DataSource = pagedList;
+                        this.gvReply.DataBind();
+
+                        this.ucPager.TotalSize = dtReply.Rows.Count;
+                        this.ucPager.Bind();
+                    }
+                    else
+                    {
+                        this.ucPager.Visible = false;
+                        this.ltMsg.Text = "No Data";
+                        return;
+                    }
+
+                    
+
+                    foreach (DataRow drQuestion in dt.Rows)
+                    {
+                        var questionID = Convert.ToInt32(drQuestion["QuestionID"]);
+
+                        var dtOfAnswer = QuestionInfoManager.GetAnswerInfoByID(id, questionID);
+                        var dtOfReply = ReplyInfoManager.GetReplyInfo(id, questionID);
+
+                        this.PlaceHolder4.Controls.Add(new LiteralControl(drQuestion["QuestionID"] + "."));
+
+                        this.PlaceHolder4.Controls.Add(new LiteralControl(drQuestion["QuestionName"] + "<br />"));
+
+                        if (drQuestion["Type"].ToString() == "文字方塊")
+                        {
+                            for (int i = 1; i <= dt.Rows.Count; i++)
+                            {
+                                if (i == Convert.ToInt32(drQuestion["QuestionID"]))
+                                {
+                                    this.PlaceHolder4.Controls.Add(new LiteralControl("-" + "<br />"));
+                                }
+                            }
+                        }
+                        else if (drQuestion["Type"].ToString() == "單選方塊")
+                        {
+                            for (int i = 1; i <= dt.Rows.Count; i++)
+                            {
+                                if (i == Convert.ToInt32(drQuestion["QuestionID"]))
+                                {
+                                    for (int j = 0; j < dtOfAnswer.Rows.Count; j++)
+                                    {
+                                        this.PlaceHolder4.Controls.Add(new LiteralControl($"第{j+1}單選:"));
+
+                                        DataRow drAnswer = dtOfAnswer.Rows[j];
+
+                                        var value = drAnswer["value"].ToString();
+                                        var dtCount = QuestionInfoManager.GetReplySin(value, id, i);
+                                        int count = dtCount.Rows.Count;
+                                        var dtInputCount = QuestionInfoManager.GetInputCount(id, i);
+                                        int inputCount = dtInputCount.Rows.Count;
+
+                                        if (count == 0)
+                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"0%" + $"({0 + count })" + "<br />"));
+                                        else
+                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"{(100 / (j+1))*count}%" + $"({0 + count })" + "<br />"));
+
+                                    }
+                                }
+                            }
+                        }
+                        else if (drQuestion["Type"].ToString() == "複選方塊")
+                        {
+                            for (int i = 1; i <= dt.Rows.Count; i++)
+                            {
+                                if (i == Convert.ToInt32(drQuestion["QuestionID"]))
+                                {
+                                    for (int j = 0; j < dtOfAnswer.Rows.Count; j++)
+                                    {
+                                        this.PlaceHolder4.Controls.Add(new LiteralControl($"第{j + 1}複選:"));
+
+                                        DataRow drAnswer = dtOfAnswer.Rows[j];
+
+                                        var value = drAnswer["value"].ToString();
+                                        var dtCount = QuestionInfoManager.GetReplyMul(value, id, i);
+                                        int count = dtCount.Rows.Count;
+                                        var dtMulCount = QuestionInfoManager.GetMulCount(id, i);
+                                        int mulCount = dtMulCount.Rows.Count;
+
+                                        if (count == 0)
+                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"0%" + $"({0 + count })" + "<br />"));
+                                        else
+                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"{(count*100) / mulCount}%" + $"({0 + count })" + "<br />"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                 }
-
-                ddlQuestionType.Items.Insert(0, new ListItem("--Choose Type--"));
-
-                DataTable dtQuestion = new DataTable();
-
-                dtQuestion.Columns.Add(new DataColumn("QuestionID", typeof(int)));
-                dtQuestion.Columns.Add(new DataColumn("QuestionName", typeof(string)));
-                dtQuestion.Columns.Add(new DataColumn("Type", typeof(string)));
-                dtQuestion.Columns.Add(new DataColumn("Required",typeof(bool)));
-                dtQuestion.Columns.Add(new DataColumn("Answer", typeof(string)));
-
-                this.Session["QuestionInfo"] = dtQuestion;
-
-                this.BindGrid();
             }
 
             this.ddlQuestionType.Items[0].Attributes["disabled"] = "disabled";
@@ -92,7 +196,17 @@ namespace Trainning.SystemAdmin
 
             var status = this.HiddenField1.Value;
             
-            ListInfoManager.CreateList(name,content, status, startTime,endTime);
+           
+
+            if (Request.QueryString["ID"] != null)
+            {
+                var id = Request.QueryString["ID"].ToString();
+
+                ListInfoManager.UpdateListInfo(id, name, content, status, startTime, endTime);
+            }
+            else
+                ListInfoManager.CreateList(name, content, status, startTime, endTime);
+
             Response.Redirect("/SystemAdmin/List.aspx");
         }
 
@@ -392,6 +506,188 @@ namespace Trainning.SystemAdmin
                     this.cbxCheck.Checked = false;
                 
             }
+        }
+
+        private int GetCurrentPage()
+        {
+            string pageText = Request.QueryString["Page"];
+
+            if (string.IsNullOrWhiteSpace(pageText))
+                return 1;
+            int intPage;
+            if (!int.TryParse(pageText, out intPage))
+                return 1;
+            if (intPage <= 0)
+                return 1;
+            return intPage;
+        }
+
+        private DataTable GetPagedDataTable(DataTable dt)
+        {
+            DataTable dtPaged = dt.Clone();
+
+            int startIndex = (this.GetCurrentPage() - 1) * 10;
+            int endIndex = (this.GetCurrentPage()) * 10;
+            if (endIndex > dt.Rows.Count)
+                endIndex = dt.Rows.Count;
+
+            for (var i = startIndex; i < endIndex; i++)
+            {
+                DataRow dr = dt.Rows[i];
+                var drNew = dtPaged.NewRow();
+
+                foreach (DataColumn dc in dt.Columns)
+                {
+                    drNew[dc.ColumnName] = dr[dc];
+                }
+
+                dtPaged.Rows.Add(drNew);
+            }
+            return dtPaged;
+        }
+
+        protected void btnInfo_Click(object sender, EventArgs e)
+        {
+            this.PlaceHolder1.Visible = false;
+            this.PlaceHolder2.Visible = true;
+            this.PlaceHolder3.Visible = true;
+
+            var btnLoad = (Control)sender;
+            GridViewRow row = (GridViewRow)btnLoad.NamingContainer;
+
+            var name = row.Cells[1].Text;
+
+            var dr = ReplyInfoManager.GetReplyByName(name);
+
+            this.ltName.Text = dr["Name"].ToString();
+            this.ltPhone.Text = dr["Phone"].ToString();
+            this.ltEmail.Text = dr["Email"].ToString();
+            this.ltAge.Text = dr["Age"].ToString();
+            this.ltReplyTime.Text = dr["ReplyTime"].ToString();
+
+            var id = Request.QueryString["ID"];
+
+            var dt = QuestionInfoManager.GetQuestionByID(id);
+
+            foreach (DataRow drQuestion in dt.Rows)
+            {
+                this.PlaceHolder3.Controls.Add(new LiteralControl(drQuestion["QuestionID"] + "."));
+
+                this.PlaceHolder3.Controls.Add(new LiteralControl(drQuestion["QuestionName"] + "<br />"));
+
+                if (drQuestion["Type"].ToString() == "文字方塊")
+                {
+                    for (int i = 1; i <= dt.Rows.Count; i++)
+                    {
+                        if (i == Convert.ToInt32(drQuestion["QuestionID"]))
+                        {
+                            var drQuestionID = ReplyInfoManager.GetReply(name,i);
+                            this.PlaceHolder3.Controls.Add(new LiteralControl(drQuestionID["ReplyAnswer"] + "<br />"));
+                        }
+                    }
+                }
+                else if (drQuestion["Type"].ToString() == "單選方塊")
+                {
+                    for (int i = 1; i <= dt.Rows.Count; i++)
+                    {
+                        if (i == Convert.ToInt32(drQuestion["QuestionID"]))
+                        {
+                            var drQuestionID = ReplyInfoManager.GetReply(name, i);
+                            this.PlaceHolder3.Controls.Add(new LiteralControl(drQuestionID["ReplyAnswer"] + "<br />"));
+                        }
+                    }
+                }
+                else if (drQuestion["Type"].ToString() == "複選方塊")
+                {
+                    for (int i = 1; i <= dt.Rows.Count; i++)
+                    {
+                        if (i == Convert.ToInt32(drQuestion["QuestionID"]))
+                        {
+                            var drQuestionID = ReplyInfoManager.GetReply(name, i);
+                            this.PlaceHolder3.Controls.Add(new LiteralControl(drQuestionID["ReplyAnswer"] + "<br />"));
+                        }
+                    }
+                }
+            }
+        }
+
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            this.PlaceHolder1.Visible = true;
+            this.PlaceHolder2.Visible = false;
+            this.PlaceHolder3.Visible = false;
+        }
+        protected void btnDownload_Click(object sender, EventArgs e)
+        {
+            var id = Request.QueryString["ID"];
+
+            if (id != null)
+            {
+                string constr = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                string dbCommandString =
+                    $@" SELECT Name as 姓名, Phone as 電話, Email, Age as 年齡, ListInfo.ListName as 問卷, QuestionInfo.QuestionName as 問題, QuestionInfo.Type as 問題種類, ReplyAnswer as 回答
+                    FROM ReplyInfo
+				    JOIN QuestionInfo
+					ON ReplyInfo.QuestionID = QuestionInfo.QuestionID AND ReplyInfo.ListID = QuestionInfo.ID
+					JOIN ListInfo
+					ON ReplyInfo.ListID = ListInfo.ID
+                    WHERE ReplyInfo.ListID = @id
+					ORDER BY Name ASC
+                ";
+
+                using (SqlConnection con = new SqlConnection(constr))
+                {
+                    using (SqlCommand cmd = new SqlCommand(dbCommandString, con))
+                    {
+                        using (SqlDataAdapter sda = new SqlDataAdapter())
+                        {
+                            cmd.Parameters.AddWithValue("@id", id);
+                            cmd.Connection = con;
+                            sda.SelectCommand = cmd;
+                            using (DataTable dt = new DataTable())
+                            {
+                                sda.Fill(dt);
+
+                                //Build the CSV file data as a Comma separated string.
+                                string csv = string.Empty;
+
+                                foreach (DataColumn column in dt.Columns)
+                                {
+                                    //Add the Header row for CSV file.
+                                    csv += column.ColumnName + ',';
+                                }
+
+                                //Add new line.
+                                csv += "\r\n";
+
+                                foreach (DataRow row in dt.Rows)
+                                {
+                                    foreach (DataColumn column in dt.Columns)
+                                    {
+                                        //Add the Data rows.
+                                        csv += row[column.ColumnName].ToString().Replace(",", ";") + ',';
+                                    }
+
+                                    //Add new line.
+                                    csv += "\r\n";
+                                }
+
+                                //Download the CSV file.
+                                Response.Clear();
+                                Response.Buffer = true;
+                                Response.AddHeader("content-disposition", "attachment;filename=SqlExport.csv");
+                                Response.Charset = "";
+                                Response.ContentType = "application/text";
+                                Response.Output.Write(csv);
+                                Response.Flush();
+                                Response.End();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+                this.ltMsg.Text = "NO DATA";
         }
     }
 }
