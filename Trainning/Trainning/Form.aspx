@@ -37,10 +37,15 @@
         <asp:PlaceHolder ID="PlaceHolder1" runat="server">
         </asp:PlaceHolder>
         <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click"/>
-        <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click"/>
+        <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click"/><br />
         <asp:Literal ID="Literal1" runat="server" Visible="false"></asp:Literal>
         <asp:Literal ID="Literal2" runat="server" Visible="false"></asp:Literal>
         <asp:Literal ID="Literal3" runat="server" Visible="false"></asp:Literal>
+        <span style="color: red">
+            <asp:Literal ID="ltMsg" runat="server"></asp:Literal>
+            <asp:Literal ID="ltMsg1" runat="server"></asp:Literal>
+            <asp:Literal ID="ltMsg2" runat="server"></asp:Literal>
+        </span>
     </form>
 </body>
 </html>

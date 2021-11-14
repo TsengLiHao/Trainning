@@ -191,5 +191,10 @@ namespace Trainning.SystemAdmin
             }
             Response.Redirect(this.Request.RawUrl);
         }
+
+        protected void ImageButton2_Click(object sender, ImageClickEventArgs e)
+        {
+            Response.Redirect("/SystemAdmin/Detail.aspx");
+        }
     }
 }

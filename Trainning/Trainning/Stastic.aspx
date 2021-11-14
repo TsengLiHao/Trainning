@@ -14,14 +14,7 @@
          <h1>前台</h1>
         <asp:Label ID="lblTitle" runat="server" ></asp:Label><br />
         <asp:PlaceHolder ID="PlaceHolder1" runat="server"></asp:PlaceHolder>
-        <asp:Chart ID="Chart1" runat="server">
-            <Series>
-                <asp:Series Name="Series1" ChartType="Pie"></asp:Series>
-            </Series>
-            <ChartAreas>
-                <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
-            </ChartAreas>
-        </asp:Chart>
+        <asp:Button ID="btnBack" runat="server" Text="返回" OnClick="btnBack_Click" />
     </form>
 </body>
 </html>

@@ -36,7 +36,7 @@
         <asp:Literal ID="ltAge" runat="server"></asp:Literal><br /><br />
         <asp:PlaceHolder ID="PlaceHolder1" runat="server">
         </asp:PlaceHolder>
-        <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click"/>
+        <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click" OnClientClick="history.back(-1);event.returnValue=false;"/>
         <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click"/>
         <asp:Literal ID="Literal1" runat="server"></asp:Literal>
     </form>

@@ -17,6 +17,8 @@ namespace Trainning.SystemAdmin
         {
             if (!IsPostBack)
             {
+                this.cbxTurnOn.Checked = true;
+
                 var commonQuestion = CommonQuestionInfoManager.GetCommonQuestionInfo();
 
                 ddlType.DataSource = commonQuestion;
@@ -175,7 +177,7 @@ namespace Trainning.SystemAdmin
         }
         protected void btnCancel1_Click(object sender, EventArgs e)
         {
-
+            Response.Redirect("/SystemAdmin/List.aspx");
         }
 
         protected void btnSubmit1_Click(object sender, EventArgs e)

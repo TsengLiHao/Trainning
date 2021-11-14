@@ -13,11 +13,12 @@ namespace Trainning
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-                if (Request.QueryString["ID"] == null)
-                {
-                    Response.Redirect("/List.aspx");
-                }
-
+            if (Request.QueryString["ID"] == null)
+            {
+                Response.Redirect("/List.aspx");
+            }
+            else
+            {
                 var id = Request.QueryString["ID"];
 
                 var drList = ListInfoManager.GetListInfoByID(id);
@@ -63,7 +64,11 @@ namespace Trainning
 
                     this.PlaceHolder1.Controls.Add(new LiteralControl(dr["QuestionID"] + "."));
 
-                    this.PlaceHolder1.Controls.Add(new LiteralControl(dr["QuestionName"] + "<br />"));
+                    Literal ltquestionName = new Literal();
+                    ltquestionName.ID = "questionName" + dr["QuestionID"];
+                    ltquestionName.Text = dr["QuestionName"].ToString();
+                    this.PlaceHolder1.Controls.Add(ltquestionName);
+                    this.PlaceHolder1.Controls.Add(new LiteralControl("<br />"));
 
                     Literal ID = new Literal();
                     ID.Text = dr["QuestionID"].ToString();
@@ -101,7 +106,8 @@ namespace Trainning
                         this.PlaceHolder1.Controls.Add(new LiteralControl("<br />"));
                     }
                 }
-            
+            }
+          
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
@@ -111,6 +117,22 @@ namespace Trainning
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(this.txtName.Text) || string.IsNullOrEmpty(this.txtPhone.Text) || string.IsNullOrEmpty(this.txtEmail.Text) || string.IsNullOrEmpty(this.txtAge.Text))
+            {
+                this.ltMsg.Text = "請填入個人基本資料";
+                return;
+            }
+            else
+                this.ltMsg.Text = "";
+
+            if (Convert.ToInt32(this.txtAge.Text) <= 0)
+            {
+                this.ltMsg.Text = "請輸入正確年齡";
+                return;
+            }
+            else
+                this.ltMsg.Text = "";
+
             var id = Request.QueryString["ID"];
             var dt = QuestionInfoManager.GetQuestionByID(id);
 
@@ -122,9 +144,22 @@ namespace Trainning
                 {
                     this.Literal1.Text = getTextValue.Text;
                     this.Session[$"ResponseOfTest{i}"] = this.Literal1.Text;
+
+                    var getQuestionName = (Literal)this.PlaceHolder1.FindControl($"questionName{i}");
+                    if (getQuestionName.Text.Contains("(必填)"))
+                    {
+                        if (string.IsNullOrEmpty(getTextValue.Text))
+                        {
+                            this.ltMsg1.Text = "請回答'必填'欄位";
+                            return;
+                        }
+                        else
+                            this.ltMsg1.Text = "";
+                    }
                 }
                 else
                     continue;
+
             }
             for (int i = 1; i <= dt.Rows.Count; i++)
             {
@@ -134,6 +169,18 @@ namespace Trainning
                 {
                     this.Literal2.Text = getRadioValue.SelectedValue;
                     this.Session[$"ResponseOfRadio{i}"] = this.Literal2.Text;
+
+                    var getQuestionName = (Literal)this.PlaceHolder1.FindControl($"questionName{i}");
+                    if (getQuestionName.Text.Contains("(必填)"))
+                    {
+                        if (string.IsNullOrEmpty(this.Literal2.Text))
+                        {
+                            this.ltMsg2.Text = "請選擇'必填'欄位";
+                            return;
+                        }
+                        else
+                            this.ltMsg2.Text = "";
+                    }
                 }
                 else
                     continue;
@@ -166,6 +213,18 @@ namespace Trainning
                     string Checked = string.Join(",", CheckedList.ToArray());
 
                     this.Session[$"ResponseOfCheck{i}"] = Checked;
+
+                    var getQuestionName = (Literal)this.PlaceHolder1.FindControl($"questionName{i}");
+                    if (getQuestionName.Text.Contains("(必填)"))
+                    {
+                        if (string.IsNullOrEmpty(Checked))
+                        {
+                            this.ltMsg2.Text = "請選擇'必填'欄位";
+                            return;
+                        }
+                        else
+                            this.ltMsg2.Text = "";
+                    }
                 }
                 else
                     continue;

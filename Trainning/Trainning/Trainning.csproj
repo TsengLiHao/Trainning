@@ -125,6 +125,7 @@
     <Content Include="Script\jquery-3.6.0.min.js" />
     <Content Include="Stastic.aspx" />
     <Content Include="SystemAdmin\Detail.aspx" />
+    <Content Include="SystemAdmin\image\Add.png" />
     <Content Include="SystemAdmin\image\Trash Can.png" />
     <Content Include="SystemAdmin\List.aspx" />
     <Content Include="SystemAdmin\Question.aspx" />

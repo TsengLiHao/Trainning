@@ -13,6 +13,10 @@ namespace Trainning
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Request.QueryString["ID"] == null)
+            {
+                Response.Redirect("/List.aspx");
+            }
 
             var id = Request.QueryString["ID"];
 
@@ -197,15 +201,13 @@ namespace Trainning
                 else
                     continue;
             }
-
-
-
             Response.Redirect("/List.aspx"); 
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            Response.Redirect("/Form.aspx");
+            //var id = Request.QueryString["ID"];
+            //Response.Redirect($"/Form.aspx?ID={id}");
         }
     }
 }
