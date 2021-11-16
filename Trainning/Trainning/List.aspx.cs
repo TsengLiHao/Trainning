@@ -17,10 +17,14 @@ namespace Trainning
         {
             if (!IsPostBack)
             {
+                this.ucPager.Visible = false;
+
                 var dt = ListInfoManager.GetListInfo();
 
                 if (dt.Rows.Count > 0)
                 {
+                    this.ucPager.Visible = true;
+
                     var pagedList = this.GetPagedDataTable(dt);
 
                     this.gvList.DataSource = pagedList;

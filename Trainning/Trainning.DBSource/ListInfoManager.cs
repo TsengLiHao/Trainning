@@ -284,7 +284,8 @@ namespace Trainning.DBSource
             string connectionString = GetConnectionString();
             string dbCommandString =
                 $@" DELETE [ListInfo]
-                    WHERE ListID = @listID ";
+                    WHERE ListID = @listID 
+                ";
 
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -302,6 +303,44 @@ namespace Trainning.DBSource
                     catch (Exception ex)
                     {
                         Logger.WriteLog(ex);
+                    }
+                }
+            }
+        }
+
+        public static DataRow GetIDByListID(int listID)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" SELECT [ID],[ListName],[ListContent],[Status],[StartTime],[Endtime]
+                    FROM [Trainning].[dbo].[ListInfo]
+                    WHERE ListID=@listID
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@listID", listID);
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        reader.Close();
+
+                        if (dt.Rows.Count == 0)
+                            return null;
+
+                        DataRow dr = dt.Rows[0];
+                        return dr;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                        return null;
                     }
                 }
             }

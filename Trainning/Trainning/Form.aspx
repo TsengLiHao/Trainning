@@ -13,6 +13,10 @@
            top:0px;
            right:0px;
        }
+       .lbl{
+          display:inline-block;
+          width:40px;
+       }
    </style>
 </head>
 <body>
@@ -24,20 +28,26 @@
             <asp:Label ID="Label2" runat="server" Text="～"></asp:Label>
             <asp:Literal ID="ltEnd" runat="server"></asp:Literal>
         </div>
-        <asp:Label ID="lblTitle" runat="server" ></asp:Label><br />
-        <asp:TextBox ID="txtContent" runat="server" ReadOnly="true"  TextMode="MultiLine" BorderStyle="None"></asp:TextBox><br />
-        姓名:
-        <asp:TextBox ID="txtName" runat="server"></asp:TextBox><br />
-        手機:
-        <asp:TextBox ID="txtPhone" runat="server" TextMode="Phone"></asp:TextBox><br />
-        Email:
-        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"></asp:TextBox><br />
-        年齡:
+        <div align="center">
+        <asp:Label ID="lblTitle" runat="server" Font-Size="20"></asp:Label><br />
+        <asp:TextBox ID="txtContent" runat="server" ReadOnly="true"  TextMode="MultiLine" style="text-align: center" BorderStyle="None" Font-Size="16"></asp:TextBox>
+        </div><br />
+        <asp:Label ID="lblName" runat="server" Text="姓名:" CssClass="lbl"></asp:Label>
+        <asp:TextBox ID="txtName" runat="server"  ></asp:TextBox><br />
+        <asp:Label ID="lblPhone" runat="server" Text="手機:" CssClass="lbl"></asp:Label>
+        <asp:TextBox ID="txtPhone" runat="server" TextMode="Phone" ></asp:TextBox><br />
+        <asp:Label ID="lalEmail" runat="server" Text="Email:" CssClass="lbl"></asp:Label>
+        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" ></asp:TextBox><br />
+        <asp:Label ID="lblAge" runat="server" Text="年齡:" CssClass="lbl"></asp:Label>
         <asp:TextBox ID="txtAge" runat="server" TextMode="Number"></asp:TextBox><br />
         <asp:PlaceHolder ID="PlaceHolder1" runat="server">
         </asp:PlaceHolder>
+        <div align="center">
+            <asp:Literal ID="ltAmount" runat="server"></asp:Literal><br /><br />
         <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click"/>
-        <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click"/><br />
+            &emsp;
+        <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click"/>
+        </div><br />
         <asp:Literal ID="Literal1" runat="server" Visible="false"></asp:Literal>
         <asp:Literal ID="Literal2" runat="server" Visible="false"></asp:Literal>
         <asp:Literal ID="Literal3" runat="server" Visible="false"></asp:Literal>

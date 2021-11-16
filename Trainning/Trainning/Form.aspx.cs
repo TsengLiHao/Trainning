@@ -56,6 +56,13 @@ namespace Trainning
 
                 var dt = QuestionInfoManager.GetQuestionByID(id);
 
+                if(dt.Rows.Count == 0)
+                {
+                    Response.Write("<script>alert('問卷尚未完善,暫時無法進入')</script>"); 
+                    Server.Transfer("/List.aspx");
+                    return;
+                }
+
                 foreach (DataRow dr in dt.Rows)
                 {
                     var questionID = Convert.ToInt32(dr["QuestionID"]);
@@ -104,6 +111,8 @@ namespace Trainning
                         checkList.DataBind();
 
                         this.PlaceHolder1.Controls.Add(new LiteralControl("<br />"));
+
+                        this.ltAmount.Text = $"共{dr["QuestionID"]}個問題";
                     }
                 }
             }

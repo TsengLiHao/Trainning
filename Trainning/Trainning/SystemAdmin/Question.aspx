@@ -59,6 +59,9 @@
                             </Columns>
                         </asp:GridView>
                         <asp:HiddenField ID="HiddenField1" runat="server" />
+                        <span style="color: red">
+                        <asp:Literal ID="ltMsg" runat="server"></asp:Literal>
+                        </span>
                     </div>
                 </td>
             </tr>

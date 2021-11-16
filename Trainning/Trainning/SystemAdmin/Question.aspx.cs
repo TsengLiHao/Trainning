@@ -14,6 +14,12 @@ namespace Trainning.SystemAdmin
         {
             if (!IsPostBack)
             {
+                if (this.Session["UserInfo"] == null)
+                {
+                    Response.Redirect("/Login.aspx");
+                    return;
+                }
+
                 var dt = CommonQuestionInfoManager.GetCommonQuestionInfo();
 
                 this.gvCommonQuestion.DataSource = dt;
@@ -23,6 +29,23 @@ namespace Trainning.SystemAdmin
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(this.txtTitle.Text) || string.IsNullOrEmpty(this.txtQuestion.Text))
+            {
+                this.ltMsg.Text = "請填寫空白處";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(this.txtAnswer.Text))
+            {
+                if (this.ddlQuestionType.Text == "單選方塊" || this.ddlQuestionType.Text == "複選方塊")
+                {
+                    this.ltMsg.Text = "請填寫空白處";
+                    return;
+                }
+            }
+
+            this.ltMsg.Text = "";
+
             var title = this.txtTitle.Text;
             var name = this.txtQuestion.Text;
             var type = this.ddlQuestionType.Text;

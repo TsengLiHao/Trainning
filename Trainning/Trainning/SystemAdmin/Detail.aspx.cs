@@ -17,6 +17,13 @@ namespace Trainning.SystemAdmin
         {
             if (!IsPostBack)
             {
+                if (this.Session["UserInfo"] == null)
+                {
+                    Response.Redirect("/Login.aspx");
+                    return;
+                }
+
+                this.ucPager.Visible = false;
                 this.cbxTurnOn.Checked = true;
 
                 var commonQuestion = CommonQuestionInfoManager.GetCommonQuestionInfo();
@@ -72,6 +79,8 @@ namespace Trainning.SystemAdmin
 
                     if (dtReply.Rows.Count > 0)
                     {
+                        this.ucPager.Visible = true;
+
                         var pagedList = this.GetPagedDataTable(dtReply);
 
                         this.gvReply.DataSource = pagedList;
@@ -86,85 +95,88 @@ namespace Trainning.SystemAdmin
                         this.ltMsg.Text = "No Data";
                         return;
                     }
+                }
+            }
+            if (Request.QueryString["ID"] != null)
+            {
+                var idStastic = Request.QueryString["ID"];
 
-                    
+                var dtStastic = QuestionInfoManager.GetQuestionByID(idStastic);
 
-                    foreach (DataRow drQuestion in dt.Rows)
+                foreach (DataRow drQuestion in dtStastic.Rows)
+                {
+                    var questionID = Convert.ToInt32(drQuestion["QuestionID"]);
+
+                    var dtOfAnswer = QuestionInfoManager.GetAnswerInfoByID(idStastic, questionID);
+                    var dtOfReply = ReplyInfoManager.GetReplyInfo(idStastic, questionID);
+
+                    this.PlaceHolder4.Controls.Add(new LiteralControl(drQuestion["QuestionID"] + "."));
+
+                    this.PlaceHolder4.Controls.Add(new LiteralControl(drQuestion["QuestionName"] + "<br />"));
+
+                    if (drQuestion["Type"].ToString() == "文字方塊")
                     {
-                        var questionID = Convert.ToInt32(drQuestion["QuestionID"]);
-
-                        var dtOfAnswer = QuestionInfoManager.GetAnswerInfoByID(id, questionID);
-                        var dtOfReply = ReplyInfoManager.GetReplyInfo(id, questionID);
-
-                        this.PlaceHolder4.Controls.Add(new LiteralControl(drQuestion["QuestionID"] + "."));
-
-                        this.PlaceHolder4.Controls.Add(new LiteralControl(drQuestion["QuestionName"] + "<br />"));
-
-                        if (drQuestion["Type"].ToString() == "文字方塊")
+                        for (int i = 1; i <= dtStastic.Rows.Count; i++)
                         {
-                            for (int i = 1; i <= dt.Rows.Count; i++)
+                            if (i == Convert.ToInt32(drQuestion["QuestionID"]))
                             {
-                                if (i == Convert.ToInt32(drQuestion["QuestionID"]))
-                                {
-                                    this.PlaceHolder4.Controls.Add(new LiteralControl("-" + "<br />"));
-                                }
+                                this.PlaceHolder4.Controls.Add(new LiteralControl("-" + "<br />"));
                             }
                         }
-                        else if (drQuestion["Type"].ToString() == "單選方塊")
+                    }
+                    else if (drQuestion["Type"].ToString() == "單選方塊")
+                    {
+                        for (int i = 1; i <= dtStastic.Rows.Count; i++)
                         {
-                            for (int i = 1; i <= dt.Rows.Count; i++)
+                            if (i == Convert.ToInt32(drQuestion["QuestionID"]))
                             {
-                                if (i == Convert.ToInt32(drQuestion["QuestionID"]))
+                                for (int j = 0; j < dtOfAnswer.Rows.Count; j++)
                                 {
-                                    for (int j = 0; j < dtOfAnswer.Rows.Count; j++)
-                                    {
-                                        this.PlaceHolder4.Controls.Add(new LiteralControl($"第{j+1}單選:"));
+                                    this.PlaceHolder4.Controls.Add(new LiteralControl($"第{j + 1}單選:"));
 
-                                        DataRow drAnswer = dtOfAnswer.Rows[j];
+                                    DataRow drAnswer = dtOfAnswer.Rows[j];
 
-                                        var value = drAnswer["value"].ToString();
-                                        var dtCount = QuestionInfoManager.GetReplySin(value, id, i);
-                                        int count = dtCount.Rows.Count;
-                                        var dtInputCount = QuestionInfoManager.GetInputCount(id, i);
-                                        int inputCount = dtInputCount.Rows.Count;
+                                    var value = drAnswer["value"].ToString();
+                                    var dtCount = QuestionInfoManager.GetReplySin(value, idStastic, i);
+                                    int count = dtCount.Rows.Count;
+                                    var dtInputCount = QuestionInfoManager.GetInputCount(idStastic, i);
+                                    int inputCount = dtInputCount.Rows.Count;
 
-                                        if (count == 0)
-                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"0%" + $"({0 + count })" + "<br />"));
-                                        else
-                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"{(100 / inputCount) *count}%" + $"({0 + count })" + "<br />"));
+                                    if (count == 0)
+                                        this.PlaceHolder4.Controls.Add(new LiteralControl($"0%" + $"({0 + count })" + "<br />"));
+                                    else
+                                        this.PlaceHolder4.Controls.Add(new LiteralControl($"{(100 / inputCount) * count}%" + $"({0 + count })" + "<br />"));
 
-                                    }
-                                }
-                            }
-                        }
-                        else if (drQuestion["Type"].ToString() == "複選方塊")
-                        {
-                            for (int i = 1; i <= dt.Rows.Count; i++)
-                            {
-                                if (i == Convert.ToInt32(drQuestion["QuestionID"]))
-                                {
-                                    for (int j = 0; j < dtOfAnswer.Rows.Count; j++)
-                                    {
-                                        this.PlaceHolder4.Controls.Add(new LiteralControl($"第{j + 1}複選:"));
-
-                                        DataRow drAnswer = dtOfAnswer.Rows[j];
-
-                                        var value = drAnswer["value"].ToString();
-                                        var dtCount = QuestionInfoManager.GetReplyMul(value, id, i);
-                                        int count = dtCount.Rows.Count;
-                                        var dtMulCount = QuestionInfoManager.GetMulCount(id, i);
-                                        int mulCount = dtMulCount.Rows.Count;
-
-                                        if (count == 0)
-                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"0%" + $"({0 + count })" + "<br />"));
-                                        else
-                                            this.PlaceHolder4.Controls.Add(new LiteralControl($"{(count*100) / mulCount}%" + $"({0 + count })" + "<br />"));
-                                    }
                                 }
                             }
                         }
                     }
+                    else if (drQuestion["Type"].ToString() == "複選方塊")
+                    {
+                        for (int i = 1; i <= dtStastic.Rows.Count; i++)
+                        {
+                            if (i == Convert.ToInt32(drQuestion["QuestionID"]))
+                            {
+                                for (int j = 0; j < dtOfAnswer.Rows.Count; j++)
+                                {
+                                    this.PlaceHolder4.Controls.Add(new LiteralControl($"第{j + 1}複選:"));
 
+                                    DataRow drAnswer = dtOfAnswer.Rows[j];
+
+                                    var value = drAnswer["value"].ToString();
+                                    var dtCount = QuestionInfoManager.GetReplyMul(value, idStastic, i);
+                                    int count = dtCount.Rows.Count;
+                                    var dtMulCount = QuestionInfoManager.GetMulCount(idStastic, i);
+                                    int mulCount = dtMulCount.Rows.Count;
+
+                                    if (count == 0)
+                                        this.PlaceHolder4.Controls.Add(new LiteralControl($"0%" + $"({0 + count })" + "<br />"));
+                                    else
+                                        this.PlaceHolder4.Controls.Add(new LiteralControl($"{(count * 100) / mulCount}%" + $"({0 + count })" + "<br />"));
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -197,17 +209,35 @@ namespace Trainning.SystemAdmin
             }
 
             var status = this.HiddenField1.Value;
-            
-           
+
+
 
             if (Request.QueryString["ID"] != null)
             {
                 var id = Request.QueryString["ID"].ToString();
 
-                ListInfoManager.UpdateListInfo(id, name, content, status, startTime, endTime);
+                if (string.IsNullOrEmpty(this.txtName.Text) || string.IsNullOrEmpty(this.txtContent.Text) || string.IsNullOrEmpty(this.txtStart.Text) || string.IsNullOrEmpty(this.txtEnd.Text))
+                {
+                    this.ltListMsg.Text = "請填寫空白處";
+                    return;
+                }
+                else
+                {
+                    ListInfoManager.UpdateListInfo(id, name, content, status, startTime, endTime);
+                }
             }
             else
-                ListInfoManager.CreateList(name, content, status, startTime, endTime);
+            {
+                if (string.IsNullOrEmpty(this.txtName.Text) || string.IsNullOrEmpty(this.txtContent.Text) || string.IsNullOrEmpty(this.txtStart.Text) || string.IsNullOrEmpty(this.txtEnd.Text))
+                {
+                    this.ltListMsg.Text = "請填寫空白處";
+                    return;
+                }
+                else
+                {
+                    ListInfoManager.CreateList(name, content, status, startTime, endTime);
+                }
+            }
 
             Response.Redirect("/SystemAdmin/List.aspx");
         }
@@ -215,6 +245,38 @@ namespace Trainning.SystemAdmin
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             var id = Request.QueryString["ID"];
+
+            if(this.ddlQuestionType.Text == "--Choose Type--")
+            {
+                this.ltQuestionMsg.Text = "請選擇問題種類";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(this.txtQuestion.Text))
+            {
+                this.ltQuestionMsg.Text = "請填寫空白處";
+                return;
+            }
+
+            if(string.IsNullOrEmpty(this.txtAnswer.Text))
+            {
+                if (this.ddlQuestionType.Text == "單選方塊" || this.ddlQuestionType.Text == "複選方塊")
+                {
+                    this.ltQuestionMsg.Text = "請填寫空白處";
+                    return;
+                }
+            }
+
+            if (!this.txtAnswer.Text.Contains(";"))
+            {
+                if (this.ddlQuestionType.Text == "單選方塊" || this.ddlQuestionType.Text == "複選方塊")
+                {
+                    this.ltQuestionMsg.Text = "回答部分的答案請以:分隔";
+                    return;
+                }
+            }
+
+            this.ltQuestionMsg.Text = "";
 
             if (this.Session["LoadID"] != null)
             {
@@ -345,14 +407,12 @@ namespace Trainning.SystemAdmin
                     this.Session["NewRow"] = dtQuestion;
                 }
             }
-
-
             Response.Redirect(this.Request.RawUrl);
         }
 
         protected void btnCancel2_Click(object sender, EventArgs e)
         {
-            
+            Response.Redirect("/SystemAdmin/List.aspx");
         }
 
         protected void btnSubmit2_Click(object sender, EventArgs e)
@@ -368,6 +428,12 @@ namespace Trainning.SystemAdmin
             var rowCount = dtQuestion.Rows.Count;
 
             DataTable dt = (DataTable)this.Session["NewRow"];
+
+            if(dt == null)
+            {
+                this.ltQuestionMsg.Text = "尚未有題目可以新增,請先加入題目在執行";
+                return;
+            }
 
             foreach(DataRow dr in dt.Rows)
             {
@@ -493,6 +559,7 @@ namespace Trainning.SystemAdmin
 
         protected void ddlType_TextChanged(object sender, EventArgs e)
         {
+            
             var commonInfo = CommonQuestionInfoManager.GetCommonQuestionInfoByTitle(ddlType.SelectedValue);
 
             if(commonInfo != null)
@@ -506,7 +573,12 @@ namespace Trainning.SystemAdmin
                     this.cbxCheck.Checked = true;
                 else
                     this.cbxCheck.Checked = false;
-                
+
+                if (this.ddlQuestionType.Text == "單選方塊" || this.ddlQuestionType.Text == "複選方塊")
+                    this.txtAnswer.Enabled = true;
+                else
+                    this.txtAnswer.Enabled = false;
+
             }
         }
 
@@ -561,10 +633,10 @@ namespace Trainning.SystemAdmin
 
             var dr = ReplyInfoManager.GetReplyByName(name);
 
-            this.ltName.Text = dr["Name"].ToString();
-            this.ltPhone.Text = dr["Phone"].ToString();
-            this.ltEmail.Text = dr["Email"].ToString();
-            this.ltAge.Text = dr["Age"].ToString();
+            this.txtDetailName.Text = dr["Name"].ToString();
+            this.txtDetailPhone.Text = dr["Phone"].ToString();
+            this.txtDetailEmail.Text = dr["Email"].ToString();
+            this.txtDetailAge.Text = dr["Age"].ToString();
             this.ltReplyTime.Text = dr["ReplyTime"].ToString();
 
             var id = Request.QueryString["ID"];

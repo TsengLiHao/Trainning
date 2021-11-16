@@ -15,48 +15,56 @@ namespace Trainning.SystemAdmin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(this.Session["UserInfo"] == null)
-            {
-                Response.Redirect("/Login.aspx");
-                return;
-            }
-
-            var dt = ListInfoManager.GetListInfo();
-
-            if (dt.Rows.Count > 0)
-            {
-                var pagedList = this.GetPagedDataTable(dt);
-
-                this.gvList.DataSource = pagedList;
-                this.gvList.DataBind();
-
-                this.ucPager.TotalSize = dt.Rows.Count;
-                this.ucPager.Bind();
-            }
-            else
+            if (!IsPostBack)
             {
                 this.ucPager.Visible = false;
-                this.ltMsg.Text = "No Data";
-                return;
-            }
 
-            foreach (GridViewRow row in gvList.Rows)
-            {
-                if (row.RowType == DataControlRowType.DataRow)
+                if (this.Session["UserInfo"] == null)
                 {
+                    Response.Redirect("/Login.aspx");
+                    return;
+                }
+                else
+                    this.btnLogout.Visible = true;
 
-                    var end = Convert.ToDateTime(row.Cells[5].Text);
+                var dt = ListInfoManager.GetListInfo();
 
-                    if (end < DateTime.Today)
-                        row.Cells[3].Text = "已結束";
+                if (dt.Rows.Count > 0)
+                {
+                    this.ucPager.Visible = true;
 
-                    var start = Convert.ToDateTime(row.Cells[4].Text);
+                    var pagedList = this.GetPagedDataTable(dt);
 
-                    if (start > DateTime.Today)
-                        row.Cells[3].Text = "未開放";
+                    this.gvList.DataSource = pagedList;
+                    this.gvList.DataBind();
+
+                    this.ucPager.TotalSize = dt.Rows.Count;
+                    this.ucPager.Bind();
+                }
+                else
+                {
+                    this.ucPager.Visible = false;
+                    this.ltMsg.Text = "No Data";
+                    return;
+                }
+
+                foreach (GridViewRow row in gvList.Rows)
+                {
+                    if (row.RowType == DataControlRowType.DataRow)
+                    {
+
+                        var end = Convert.ToDateTime(row.Cells[5].Text);
+
+                        if (end < DateTime.Today)
+                            row.Cells[3].Text = "已結束";
+
+                        var start = Convert.ToDateTime(row.Cells[4].Text);
+
+                        if (start > DateTime.Today)
+                            row.Cells[3].Text = "未開放";
+                    }
                 }
             }
-
         }
 
         private void SearchTitle()
@@ -185,7 +193,13 @@ namespace Trainning.SystemAdmin
                     if (chxDelete.Checked)
                     {
                         int id = Convert.ToInt32(row.Cells[1].Text);
+
+                        var dr = ListInfoManager.GetIDByListID(id);
+                        var listID = dr["ID"].ToString();
+
                         ListInfoManager.DeleteList(id);
+                        QuestionInfoManager.DeleteAllQuestion(listID);
+                        ReplyInfoManager.DeleteAllReply(listID);
                     }
                 }
             }
@@ -195,6 +209,13 @@ namespace Trainning.SystemAdmin
         protected void ImageButton2_Click(object sender, ImageClickEventArgs e)
         {
             Response.Redirect("/SystemAdmin/Detail.aspx");
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            this.Session["UserInfo"] = null;
+            Response.Redirect("/Default.aspx");
+
         }
     }
 }

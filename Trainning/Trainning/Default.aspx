@@ -11,8 +11,8 @@
     <form id="form1" runat="server">
         <div>
             <h1>動態問券</h1>
-            <asp:Button ID="btnLogin" runat="server" Text="登入" OnClick="btnLogin_Click"/>
-            <asp:Button ID="btnWrite" runat="server" Text="填寫" OnClick="btnWrite_Click"/>
+            <asp:Button ID="btnLogin" runat="server" Text="管理者登入" OnClick="btnLogin_Click"/>
+            <asp:Button ID="btnWrite" runat="server" Text="問卷填寫" OnClick="btnWrite_Click"/>
         </div>
     </form>
 </body>

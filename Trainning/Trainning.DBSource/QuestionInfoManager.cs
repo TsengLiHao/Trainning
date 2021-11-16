@@ -452,5 +452,33 @@ namespace Trainning.DBSource
             }
         }
 
+        public static void DeleteAllQuestion(string id)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" DELETE [QuestionInfo]
+                    WHERE ID = @id
+                ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                    }
+                }
+            }
+        }
+
     }
 }

@@ -220,5 +220,34 @@ namespace Trainning.DBSource
                 }
             }
         }
+
+        public static void DeleteAllReply(string listID)
+        {
+            string connectionString = GetConnectionString();
+            string dbCommandString =
+                $@" DELETE [ReplyInfo]
+                    WHERE ListID = @listID
+                ";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(dbCommandString, connection))
+                {
+                    command.Parameters.AddWithValue("@listID", listID);
+
+                    try
+                    {
+                        connection.Open();
+                        command.ExecuteNonQuery();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog(ex);
+                    }
+                }
+            }
+        }
     }
 }

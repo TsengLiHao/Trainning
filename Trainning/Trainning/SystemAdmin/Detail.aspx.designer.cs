@@ -105,6 +105,15 @@ namespace Trainning.SystemAdmin
         protected global::System.Web.UI.WebControls.Button btnSubmit1;
 
         /// <summary>
+        /// ltListMsg 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltListMsg;
+
+        /// <summary>
         /// ddlType 控制項。
         /// </summary>
         /// <remarks>
@@ -231,6 +240,15 @@ namespace Trainning.SystemAdmin
         protected global::System.Web.UI.WebControls.Button btnSubmit2;
 
         /// <summary>
+        /// ltQuestionMsg 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltQuestionMsg;
+
+        /// <summary>
         /// PlaceHolder1 控制項。
         /// </summary>
         /// <remarks>
@@ -294,6 +312,15 @@ namespace Trainning.SystemAdmin
         protected global::System.Web.UI.WebControls.Literal ltName;
 
         /// <summary>
+        /// txtDetailName 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDetailName;
+
+        /// <summary>
         /// ltPhone 控制項。
         /// </summary>
         /// <remarks>
@@ -301,6 +328,15 @@ namespace Trainning.SystemAdmin
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal ltPhone;
+
+        /// <summary>
+        /// txtDetailPhone 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDetailPhone;
 
         /// <summary>
         /// ltEmail 控制項。
@@ -312,6 +348,15 @@ namespace Trainning.SystemAdmin
         protected global::System.Web.UI.WebControls.Literal ltEmail;
 
         /// <summary>
+        /// txtDetailEmail 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDetailEmail;
+
+        /// <summary>
         /// ltAge 控制項。
         /// </summary>
         /// <remarks>
@@ -319,6 +364,15 @@ namespace Trainning.SystemAdmin
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal ltAge;
+
+        /// <summary>
+        /// txtDetailAge 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDetailAge;
 
         /// <summary>
         /// ltReplyTime 控制項。

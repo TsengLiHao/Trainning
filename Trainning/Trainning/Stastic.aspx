@@ -12,7 +12,9 @@
 <body>
     <form id="form1" runat="server">
          <h1>前台</h1>
-        <asp:Label ID="lblTitle" runat="server" ></asp:Label><br />
+        <div align="center">
+        <asp:Label ID="lblTitle" runat="server" Font-Size="20"></asp:Label><br />
+        </div>
         <asp:PlaceHolder ID="PlaceHolder1" runat="server"></asp:PlaceHolder>
         <asp:Button ID="btnBack" runat="server" Text="返回" OnClick="btnBack_Click" />
     </form>
