@@ -59,6 +59,7 @@ namespace Trainning.SystemAdmin
 
                     var dt = QuestionInfoManager.GetQuestionByID(id);
 
+
                     gvQuestionStatus.DataSource = dt;
                     gvQuestionStatus.DataBind();
 
@@ -77,38 +78,44 @@ namespace Trainning.SystemAdmin
                     this.gvReply.DataSource = dtReply;
                     this.gvReply.DataBind();
 
-                    if (dtReply.Rows.Count > 0)
-                    {
-                        this.ucPager.Visible = true;
+                    //if (dtReply.Rows.Count > 0)
+                    //{
+                    //    this.ucPager.Visible = true;
 
-                        var pagedList = this.GetPagedDataTable(dtReply);
+                    //    var pagedList = this.GetPagedDataTable(dtReply);
 
-                        this.gvReply.DataSource = pagedList;
-                        this.gvReply.DataBind();
+                    //    this.gvReply.DataSource = pagedList;
+                    //    this.gvReply.DataBind();
 
-                        this.ucPager.TotalSize = dtReply.Rows.Count;
-                        this.ucPager.Bind();
-                    }
-                    else
-                    {
-                        this.ucPager.Visible = false;
+                    //    this.ucPager.TotalSize = dtReply.Rows.Count;
+                    //    this.ucPager.Bind();
+                    //}
+                    //else
+                    //{
+                    //    this.ucPager.Visible = false;
+                    //    this.ltMsg.Text = "No Data";
+                    //    return;
+                    //}
+
+                    if (dtReply.Rows.Count <= 0)
                         this.ltMsg.Text = "No Data";
-                        return;
-                    }
+                    else
+                        this.ltMsg.Text = "";
                 }
             }
+
             if (Request.QueryString["ID"] != null)
             {
-                var idStastic = Request.QueryString["ID"];
+                var id = Request.QueryString["ID"];
+                var dt = QuestionInfoManager.GetQuestionByID(id);
 
-                var dtStastic = QuestionInfoManager.GetQuestionByID(idStastic);
 
-                foreach (DataRow drQuestion in dtStastic.Rows)
+                foreach (DataRow drQuestion in dt.Rows)
                 {
                     var questionID = Convert.ToInt32(drQuestion["QuestionID"]);
 
-                    var dtOfAnswer = QuestionInfoManager.GetAnswerInfoByID(idStastic, questionID);
-                    var dtOfReply = ReplyInfoManager.GetReplyInfo(idStastic, questionID);
+                    var dtOfAnswer = QuestionInfoManager.GetAnswerInfoByID(id, questionID);
+                    var dtOfReply = ReplyInfoManager.GetReplyInfo(id, questionID);
 
                     this.PlaceHolder4.Controls.Add(new LiteralControl(drQuestion["QuestionID"] + "."));
 
@@ -116,7 +123,7 @@ namespace Trainning.SystemAdmin
 
                     if (drQuestion["Type"].ToString() == "文字方塊")
                     {
-                        for (int i = 1; i <= dtStastic.Rows.Count; i++)
+                        for (int i = 1; i <= dt.Rows.Count; i++)
                         {
                             if (i == Convert.ToInt32(drQuestion["QuestionID"]))
                             {
@@ -126,7 +133,7 @@ namespace Trainning.SystemAdmin
                     }
                     else if (drQuestion["Type"].ToString() == "單選方塊")
                     {
-                        for (int i = 1; i <= dtStastic.Rows.Count; i++)
+                        for (int i = 1; i <= dt.Rows.Count; i++)
                         {
                             if (i == Convert.ToInt32(drQuestion["QuestionID"]))
                             {
@@ -137,9 +144,9 @@ namespace Trainning.SystemAdmin
                                     DataRow drAnswer = dtOfAnswer.Rows[j];
 
                                     var value = drAnswer["value"].ToString();
-                                    var dtCount = QuestionInfoManager.GetReplySin(value, idStastic, i);
+                                    var dtCount = QuestionInfoManager.GetReplySin(value, id, i);
                                     int count = dtCount.Rows.Count;
-                                    var dtInputCount = QuestionInfoManager.GetInputCount(idStastic, i);
+                                    var dtInputCount = QuestionInfoManager.GetInputCount(id, i);
                                     int inputCount = dtInputCount.Rows.Count;
 
                                     if (count == 0)
@@ -153,7 +160,7 @@ namespace Trainning.SystemAdmin
                     }
                     else if (drQuestion["Type"].ToString() == "複選方塊")
                     {
-                        for (int i = 1; i <= dtStastic.Rows.Count; i++)
+                        for (int i = 1; i <= dt.Rows.Count; i++)
                         {
                             if (i == Convert.ToInt32(drQuestion["QuestionID"]))
                             {
@@ -164,9 +171,9 @@ namespace Trainning.SystemAdmin
                                     DataRow drAnswer = dtOfAnswer.Rows[j];
 
                                     var value = drAnswer["value"].ToString();
-                                    var dtCount = QuestionInfoManager.GetReplyMul(value, idStastic, i);
+                                    var dtCount = QuestionInfoManager.GetReplyMul(value, id, i);
                                     int count = dtCount.Rows.Count;
-                                    var dtMulCount = QuestionInfoManager.GetMulCount(idStastic, i);
+                                    var dtMulCount = QuestionInfoManager.GetMulCount(id, i);
                                     int mulCount = dtMulCount.Rows.Count;
 
                                     if (count == 0)
@@ -179,8 +186,7 @@ namespace Trainning.SystemAdmin
                     }
                 }
             }
-
-            this.ddlQuestionType.Items[0].Attributes["disabled"] = "disabled";
+                this.ddlQuestionType.Items[0].Attributes["disabled"] = "disabled";
         }
         protected void BindGrid()
         {
