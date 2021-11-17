@@ -56,6 +56,8 @@ namespace Trainning.SystemAdmin
 
                     this.txtName.Text = dr["ListName"].ToString();
                     this.txtContent.Text = dr["ListContent"].ToString();
+                    this.txtStart.Text = dr["StartTime"].ToString();
+                    this.txtEnd.Text = dr["EndTime"].ToString();
 
                     var dt = QuestionInfoManager.GetQuestionByID(id);
 
@@ -200,6 +202,12 @@ namespace Trainning.SystemAdmin
 
         protected void btnSubmit1_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(this.txtName.Text) || string.IsNullOrEmpty(this.txtContent.Text) || string.IsNullOrEmpty(this.txtStart.Text) || string.IsNullOrEmpty(this.txtEnd.Text))
+            {
+                this.ltListMsg.Text = "請填寫空白處";
+                return;
+            }
+
             var name = this.txtName.Text;
             var content = this.txtContent.Text;
             var startTime = Convert.ToDateTime(this.txtStart.Text).ToString("yyyyMMdd");
@@ -222,27 +230,12 @@ namespace Trainning.SystemAdmin
             {
                 var id = Request.QueryString["ID"].ToString();
 
-                if (string.IsNullOrEmpty(this.txtName.Text) || string.IsNullOrEmpty(this.txtContent.Text) || string.IsNullOrEmpty(this.txtStart.Text) || string.IsNullOrEmpty(this.txtEnd.Text))
-                {
-                    this.ltListMsg.Text = "請填寫空白處";
-                    return;
-                }
-                else
-                {
-                    ListInfoManager.UpdateListInfo(id, name, content, status, startTime, endTime);
-                }
+                ListInfoManager.UpdateListInfo(id, name, content, status, startTime, endTime);
+                
             }
             else
             {
-                if (string.IsNullOrEmpty(this.txtName.Text) || string.IsNullOrEmpty(this.txtContent.Text) || string.IsNullOrEmpty(this.txtStart.Text) || string.IsNullOrEmpty(this.txtEnd.Text))
-                {
-                    this.ltListMsg.Text = "請填寫空白處";
-                    return;
-                }
-                else
-                {
-                    ListInfoManager.CreateList(name, content, status, startTime, endTime);
-                }
+                ListInfoManager.CreateList(name, content, status, startTime, endTime);
             }
 
             Response.Redirect("/SystemAdmin/List.aspx");

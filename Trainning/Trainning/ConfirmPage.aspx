@@ -26,7 +26,7 @@
         </div>
         <div align="center">
         <asp:Label ID="lblTitle" runat="server" Font-Size="20"></asp:Label><br />
-        <asp:TextBox ID="txtContent" runat="server" ReadOnly="true"  TextMode="MultiLine" style="text-align: center" BorderStyle="None" Font-Size="16"></asp:TextBox>
+        <asp:TextBox ID="txtContent" runat="server" ReadOnly="true"  TextMode="MultiLine" BorderStyle="None" Font-Size="16" Width="800"></asp:TextBox>
         </div><br />
         姓名:
         <asp:Literal ID="ltName" runat="server"></asp:Literal><br />

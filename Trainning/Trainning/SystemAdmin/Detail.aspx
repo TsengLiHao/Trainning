@@ -61,9 +61,9 @@
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-list" role="tabpanel" aria-labelledby="pills-list-tab">
                             問卷名稱
-                            <asp:TextBox ID="txtName" runat="server"></asp:TextBox><br />
+                            <asp:TextBox ID="txtName" runat="server" Width="300"></asp:TextBox><br />
                             描述內容
-                            <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine"></asp:TextBox><br />
+                            <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Width="300"></asp:TextBox><br />
                             開始時間
                             <asp:TextBox ID="txtStart" runat="server" TextMode="Date"></asp:TextBox><br />
                             結束時間
@@ -72,7 +72,9 @@
                             <asp:HiddenField ID="HiddenField1" runat="server" />
                             <asp:Button ID="btnCancel1" runat="server" Text="取消" OnClick="btnCancel1_Click" />
                             <asp:Button ID="btnSubmit1" runat="server" Text="送出" OnClick="btnSubmit1_Click" /><br />
+                            <span style="color: red">
                             <asp:Literal ID="ltListMsg" runat="server"></asp:Literal>
+                            </span>
                         </div>
                         <div class="tab-pane fade" id="pills-question" role="tabpanel" aria-labelledby="pills-question-tab">
                             <asp:DropDownList ID="ddlType" runat="server" OnTextChanged="ddlType_TextChanged" AutoPostBack="true">

@@ -30,7 +30,7 @@
         </div>
         <div align="center">
         <asp:Label ID="lblTitle" runat="server" Font-Size="20"></asp:Label><br />
-        <asp:TextBox ID="txtContent" runat="server" ReadOnly="true"  TextMode="MultiLine" style="text-align: center" BorderStyle="None" Font-Size="16"></asp:TextBox>
+        <asp:TextBox ID="txtContent" runat="server" ReadOnly="true"  TextMode="MultiLine" BorderStyle="None" Font-Size="16" Width="400" Height="100"></asp:TextBox>
         </div><br />
         <asp:Label ID="lblName" runat="server" Text="姓名:" CssClass="lbl"></asp:Label>
         <asp:TextBox ID="txtName" runat="server"  ></asp:TextBox><br />
